@@ -8,17 +8,15 @@ import time
 ###
 
 def simple_work_calc(n, a, b):
-	"""Compute the value of the recurrence $W(n) = aW(n/b) + n
+	#base case
+	if n <= 1:
+		return 1
+	#recursive step
+	else:
+		return a * simple_work_calc(n//b,a,b) + n
 
-	Params:
-	n......input integer
-	a......branching factor of recursion tree
-	b......input split factor
 
-	Returns: the value of W(n).
-	"""
-	# TODO
-	pass
+
 
 def work_calc(n, a, b, f):
 	"""Compute the value of the recurrence $W(n) = aW(n/b) + f(n)
@@ -32,8 +30,13 @@ def work_calc(n, a, b, f):
 
 	Returns: the value of W(n).
 	"""
-	# TODO
-	pass
+	#base case
+	if n <= 1:
+		return 1
+	else:
+		return a * work_calc(n//b,a,b,f) + f(n)
+
+
 
 def span_calc(n, a, b, f):
 	"""Compute the span associated with the recurrence $W(n) = aW(n/b) + f(n)
@@ -47,8 +50,13 @@ def span_calc(n, a, b, f):
 
 	Returns: the value of W(n).
 	"""
-	# TODO
-	pass
+	if n <= 1:
+		return 1
+	else:
+		return f(n) + a * span_calc(n//b, a, b, f)+f(n)
+
+
+
 
 
 
@@ -102,3 +110,29 @@ def compare_span(span_fn1, span_fn2, sizes=[10, 20, 50, 100, 1000, 5000, 10000])
 	return result
 	
 
+def curried_work_calc(n):
+    def step_a(a):
+        def step_b(b):
+            def step_f(f):
+                def work_calc_inner(n):
+                    if n <= 1.0:
+                        return 1.0
+                    else:
+                        return a * work_calc_inner(n // b) + f(n)
+                return work_calc_inner
+            return step_f
+        return step_b
+    return step_a
+def curried_simple_work_calc(n):
+    def step_a(a):
+        def step_b(b):
+            def step_f(f):
+                def work_calc_inner(n):
+                    if n <= 1.0:
+                        return 1.0
+                    else:
+                        return a * work_calc_inner(n // b) + n
+                return work_calc_inner
+            return step_f
+        return step_b
+    return step_a
